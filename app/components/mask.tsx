@@ -148,6 +148,8 @@ export function MaskConfig(props: {
                 ) {
                   props.updateMask((mask) => {
                     mask.syncGlobalConfig = e.currentTarget.checked;
+                    mask.azureDeployName =
+                      useAccessStore.getState().azureDeployName;
                     mask.modelConfig = { ...globalConfig.modelConfig };
                   });
                 }
@@ -163,7 +165,16 @@ export function MaskConfig(props: {
             title={Locale.Settings.AzureDeploymentName.Title}
             subTitle={Locale.Settings.AzureDeploymentName.SubTitle}
           >
-            <TextInput value={accessStore.azureDeployName} />
+            <input
+              type="text"
+              value={props.mask.azureDeployName}
+              onInput={(e) => {
+                props.updateMask((mask) => {
+                  mask.azureDeployName = e.currentTarget.value;
+                  mask.syncGlobalConfig = false;
+                });
+              }}
+            ></input>
           </ListItem>
         </List>
       ) : null}

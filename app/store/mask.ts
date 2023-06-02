@@ -3,8 +3,9 @@ import { persist } from "zustand/middleware";
 import { BUILTIN_MASKS } from "../masks";
 import { getLang, Lang } from "../locales";
 import { DEFAULT_TOPIC, ChatMessage } from "./chat";
-import { ModelConfig, ModelType, useAppConfig } from "./config";
+import { ModelConfig, useAppConfig } from "./config";
 import { StoreKey } from "../constant";
+import { useAccessStore } from "./access";
 
 export type Mask = {
   id: number;
@@ -14,6 +15,7 @@ export type Mask = {
   context: ChatMessage[];
   syncGlobalConfig?: boolean;
   modelConfig: ModelConfig;
+  azureDeployName: string;
   lang: Lang;
   builtin: boolean;
 };
@@ -43,6 +45,7 @@ export const createEmptyMask = () =>
     context: [],
     syncGlobalConfig: true, // use global config as default
     modelConfig: { ...useAppConfig.getState().modelConfig },
+    azureDeployName: useAccessStore.getState().azureDeployName,
     lang: getLang(),
     builtin: false,
   } as Mask);

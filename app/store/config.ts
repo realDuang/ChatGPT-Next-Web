@@ -38,6 +38,8 @@ export const DEFAULT_CONFIG = {
     historyMessageCount: 4,
     compressMessageLengthThreshold: 1000,
   },
+
+  azureDeployName: "",
 };
 
 export type ChatConfig = typeof DEFAULT_CONFIG;
