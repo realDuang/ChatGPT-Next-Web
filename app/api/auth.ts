@@ -30,9 +30,19 @@ export function auth(req: NextRequest) {
   const aoaiApiKey = req.headers.get("azure-api-key") ?? "";
 
   if (!!aoaiApiKey) {
-    return {
-      error: false,
-    };
+    const accessCode = req.headers.get("accessCode") ?? "";
+    const hashedCode = md5.hash(accessCode ?? "").trim();
+    const serverConfig = getServerSideConfig();
+    if (!serverConfig.codes.has(hashedCode)) {
+      return {
+        error: true,
+        msg: !accessCode ? "empty access code" : "wrong access code",
+      };
+    } else {
+      return {
+        error: false,
+      };
+    }
   }
 
   // check if it is openai api key or user token
