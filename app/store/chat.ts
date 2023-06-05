@@ -276,6 +276,9 @@ export const useChatStore = create<ChatStore>()(
           session.messages.push(botMessage);
         });
 
+        let timer: any = null;
+        let index: number = 1;
+
         // make request
         console.log("[User Input] ", sendMessages);
         api.llm.chat({
@@ -283,17 +286,45 @@ export const useChatStore = create<ChatStore>()(
           config: { ...modelConfig, stream: true },
           onUpdate(message) {
             botMessage.streaming = true;
-            if (message) {
-              botMessage.content = message;
-            }
+
+            clearInterval(timer);
+            timer = setInterval(() => {
+              if (message) {
+                botMessage.content = message.slice(0, index);
+                get().updateStat(botMessage);
+                index++;
+              }
+              if (index > message.length) {
+                clearInterval(timer);
+              }
+            }, 20);
+
+            // botMessage.streaming = true;
+            // if (message) {
+            //   botMessage.content = message;
+            // }
             set(() => ({}));
           },
           onFinish(message) {
             botMessage.streaming = false;
-            if (message) {
-              botMessage.content = message;
-              get().onNewMessage(botMessage);
-            }
+            clearInterval(timer);
+            timer = setInterval(() => {
+              if (message) {
+                botMessage.content = message.slice(0, index);
+                get().updateStat(botMessage);
+                index++;
+              }
+              if (index > message.length) {
+                console.log("onFinish clearInterval");
+                get().onNewMessage(botMessage);
+                clearInterval(timer);
+              }
+            }, 20);
+
+            // if (message) {
+            //   botMessage.content = message;
+            //   get().onNewMessage(botMessage);
+            // }
             ChatControllerPool.remove(
               sessionIndex,
               botMessage.id ?? messageIndex,

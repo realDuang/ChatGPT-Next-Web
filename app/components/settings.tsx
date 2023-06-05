@@ -356,7 +356,7 @@ export function Settings() {
             </Popover>
           </ListItem>
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.Update.Version(currentVersion ?? "unknown")}
             subTitle={
               checkingUpdate
@@ -379,7 +379,7 @@ export function Settings() {
                 onClick={() => checkUpdate(true)}
               />
             )}
-          </ListItem>
+          </ListItem> */}
 
           <ListItem title={Locale.Settings.SendKey}>
             <Select
@@ -436,7 +436,7 @@ export function Settings() {
             subTitle={Locale.Settings.FontSize.SubTitle}
           >
             <InputRange
-              title={`${config.fontSize ?? 14}px`}
+              title={`${config.fontSize ?? 15}px`}
               value={config.fontSize}
               min="12"
               max="18"
@@ -482,9 +482,6 @@ export function Settings() {
               }
             ></input>
           </ListItem>
-        </List>
-
-        <List>
           {enabledAccessControl ? (
             <ListItem
               title={Locale.Settings.AccessCode.Title}
@@ -502,7 +499,9 @@ export function Settings() {
           ) : (
             <></>
           )}
+        </List>
 
+        {/* <List>
           <ListItem title={Locale.Settings.EnableAOAI}>
             <input
               type="checkbox"
@@ -594,9 +593,9 @@ export function Settings() {
               </ListItem>
             </>
           ) : null}
-        </List>
+        </List> */}
 
-        <List>
+        {/* <List>
           <ListItem
             title={Locale.Settings.Prompt.Disable.Title}
             subTitle={Locale.Settings.Prompt.Disable.SubTitle}
@@ -626,9 +625,9 @@ export function Settings() {
               onClick={() => setShowPromptModal(true)}
             />
           </ListItem>
-        </List>
+        </List> */}
 
-        <List>
+        {/* <List>
           <ModelConfigList
             modelConfig={config.modelConfig}
             updateConfig={(updater) => {
@@ -637,7 +636,7 @@ export function Settings() {
               config.update((config) => (config.modelConfig = modelConfig));
             }}
           />
-        </List>
+        </List> */}
 
         {shouldShowPromptModal && (
           <UserPromptModal onClose={() => setShowPromptModal(false)} />

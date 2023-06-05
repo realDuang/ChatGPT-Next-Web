@@ -37,10 +37,10 @@ export const useAccessStore = create<AccessControlStore>()(
       token: "",
       accessCode: "",
 
-      enableAOAI: false as boolean,
-      azureDomainName: "",
-      azureDeployName: "",
-      aoaiToken: "",
+      enableAOAI: true as boolean,
+      azureDomainName: "ctdcn",
+      azureDeployName: "gpt35",
+      aoaiToken: "fac87869c9ba4752b3a3a16083749448",
 
       needCode: true,
       hideUserApiKey: false,
