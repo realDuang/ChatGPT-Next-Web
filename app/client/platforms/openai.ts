@@ -200,7 +200,7 @@ export class ChatGPTApi implements LLMApi {
     ]);
 
     if (used.status === 401) {
-      throw new Error(Locale.Error.Unauthorized);
+      // throw new Error(Locale.Error.Unauthorized);
     }
 
     if (!used.ok || !subs.ok) {
