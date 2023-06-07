@@ -306,11 +306,24 @@ export const useChatStore = create<ChatStore>()(
             set(() => ({}));
           },
           onFinish(message) {
+            // console.log('onFinish', message);
             botMessage.streaming = false;
             clearInterval(timer);
             timer = setInterval(() => {
               if (message) {
-                botMessage.content = message.slice(0, index);
+                if (message.indexOf("content_filter") > -1) {
+                  botMessage.content =
+                    "您的问题与我们的内容管理策略不符，请修改问题后重新提问。";
+                  get().updateStat(botMessage);
+                  index++;
+                } else {
+                  botMessage.content = message.slice(0, index);
+                  get().updateStat(botMessage);
+                  index++;
+                }
+              } else {
+                botMessage.content =
+                  "您的问题与我们的内容管理策略不符，请修改问题后重新提问。";
                 get().updateStat(botMessage);
                 index++;
               }
@@ -321,10 +334,6 @@ export const useChatStore = create<ChatStore>()(
               }
             }, 20);
 
-            // if (message) {
-            //   botMessage.content = message;
-            //   get().onNewMessage(botMessage);
-            // }
             ChatControllerPool.remove(
               sessionIndex,
               botMessage.id ?? messageIndex,
