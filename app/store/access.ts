@@ -37,9 +37,9 @@ export const useAccessStore = create<AccessControlStore>()(
       token: "",
       accessCode: "",
 
-      enableAOAI: false as boolean,
+      enableAOAI: true as boolean,
       azureDomainName: "",
-      azureDeployName: "",
+      azureDeployName: "gpt35",
       aoaiToken: "",
 
       needCode: true,
@@ -76,11 +76,12 @@ export const useAccessStore = create<AccessControlStore>()(
 
         // has token or has code or disabled access control
         if (get().enableAOAI) {
-          return (
-            !!get().azureDomainName &&
-            !!get().azureDeployName &&
-            !!get().aoaiToken
-          );
+          return true;
+          // return (
+          //   !!get().azureDomainName &&
+          //   !!get().azureDeployName &&
+          //   !!get().aoaiToken
+          // );
         }
 
         return (

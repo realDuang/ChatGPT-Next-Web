@@ -7,8 +7,8 @@ const PROTOCOL = process.env.PROTOCOL ?? DEFAULT_PROTOCOL;
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
   const authValue = req.headers.get("Authorization") ?? "";
-  const azureApiKey = req.headers.get("azure-api-key") ?? "";
-  const azureDomainName = req.headers.get("azure-domain-name") ?? "";
+  const azureApiKey = process.env.AZURE_API_KEY ?? "";
+  const azureDomainName = process.env.AZURE_DOMAIN_NAME ?? "";
   const AZURE_OPENAI_URL = `${azureDomainName}.openai.azure.com`;
   const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
     "/api/openai/",
@@ -39,7 +39,7 @@ export async function requestOpenai(req: NextRequest) {
   }
   const timeoutId = setTimeout(() => {
     controller.abort();
-  }, 10 * 60 * 1000);
+  }, 10 * 20 * 1000);
 
   const fetchUrl = `${baseUrl}/${openaiPath}`;
   const fetchOptions: RequestInit = {

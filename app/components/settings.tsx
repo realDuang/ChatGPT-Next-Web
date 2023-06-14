@@ -269,7 +269,7 @@ export function Settings() {
   useEffect(() => {
     // checks per minutes
     checkUpdate();
-    showUsage && checkUsage();
+    // showUsage && checkUsage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -356,7 +356,7 @@ export function Settings() {
             </Popover>
           </ListItem>
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.Update.Version(currentVersion ?? "unknown")}
             subTitle={
               checkingUpdate
@@ -379,7 +379,7 @@ export function Settings() {
                 onClick={() => checkUpdate(true)}
               />
             )}
-          </ListItem>
+          </ListItem> */}
 
           <ListItem title={Locale.Settings.SendKey}>
             <Select
@@ -436,7 +436,7 @@ export function Settings() {
             subTitle={Locale.Settings.FontSize.SubTitle}
           >
             <InputRange
-              title={`${config.fontSize ?? 14}px`}
+              title={`${config.fontSize ?? 15}px`}
               value={config.fontSize}
               min="12"
               max="18"
@@ -482,27 +482,22 @@ export function Settings() {
               }
             ></input>
           </ListItem>
+          <ListItem
+            title={Locale.Settings.AccessCode.Title}
+            subTitle={Locale.Settings.AccessCode.SubTitle}
+          >
+            <PasswordInput
+              value={accessStore.accessCode}
+              type="text"
+              placeholder={Locale.Settings.AccessCode.Placeholder}
+              onChange={(e) => {
+                accessStore.updateCode(e.currentTarget.value);
+              }}
+            />
+          </ListItem>
         </List>
 
-        <List>
-          {enabledAccessControl ? (
-            <ListItem
-              title={Locale.Settings.AccessCode.Title}
-              subTitle={Locale.Settings.AccessCode.SubTitle}
-            >
-              <PasswordInput
-                value={accessStore.accessCode}
-                type="text"
-                placeholder={Locale.Settings.AccessCode.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateCode(e.currentTarget.value);
-                }}
-              />
-            </ListItem>
-          ) : (
-            <></>
-          )}
-
+        {/* <List>
           <ListItem title={Locale.Settings.EnableAOAI}>
             <input
               type="checkbox"
@@ -594,9 +589,9 @@ export function Settings() {
               </ListItem>
             </>
           ) : null}
-        </List>
+        </List> */}
 
-        <List>
+        {/* <List>
           <ListItem
             title={Locale.Settings.Prompt.Disable.Title}
             subTitle={Locale.Settings.Prompt.Disable.SubTitle}
@@ -626,9 +621,9 @@ export function Settings() {
               onClick={() => setShowPromptModal(true)}
             />
           </ListItem>
-        </List>
+        </List> */}
 
-        <List>
+        {/* <List>
           <ModelConfigList
             modelConfig={config.modelConfig}
             updateConfig={(updater) => {
@@ -637,7 +632,7 @@ export function Settings() {
               config.update((config) => (config.modelConfig = modelConfig));
             }}
           />
-        </List>
+        </List> */}
 
         {shouldShowPromptModal && (
           <UserPromptModal onClose={() => setShowPromptModal(false)} />
