@@ -22,13 +22,14 @@ export class ChatGPTApi implements LLMApi {
   public get ChatPath() {
     const OPENAI_REQUEST_PATH = OpenaiPath.ChatPath;
     const { enableAOAI, azureDeployName } = useAccessStore.getState();
-    if (!enableAOAI) return OPENAI_REQUEST_PATH;
+    if (enableAOAI && azureDeployName.length > 0) {
+      // For now azure api only support one version
+      const azureApiVersion = AZURE_API_VERSION[0].name;
+      const AZURE_REQUEST_PATH = `openai/deployments/${azureDeployName}/chat/completions?api-version=${azureApiVersion}`;
+      return AZURE_REQUEST_PATH;
+    }
 
-    // For now azure api only support one version
-    const azureApiVersion = AZURE_API_VERSION[0].name;
-
-    const AZURE_REQUEST_PATH = `openai/deployments/${azureDeployName}/chat/completions?api-version=${azureApiVersion}`;
-    return AZURE_REQUEST_PATH;
+    return OPENAI_REQUEST_PATH;
   }
 
   path(path: string): string {
@@ -38,7 +39,7 @@ export class ChatGPTApi implements LLMApi {
     }
 
     const { enableAOAI, azureEndpoint } = useAccessStore.getState();
-    if (enableAOAI) {
+    if (enableAOAI && azureEndpoint.length > 0) {
       openaiUrl = azureEndpoint;
     }
 

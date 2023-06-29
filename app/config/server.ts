@@ -13,6 +13,10 @@ declare global {
       BUILD_MODE?: "standalone" | "export";
       BUILD_APP?: string; // is building desktop app
       HIDE_BALANCE_QUERY?: string; // allow user to query balance or not
+
+      AZURE_API_KEY?: string;
+      AZURE_DEPLOY_NAME?: string;
+      AZURE_ENDPOINT?: string;
     }
   }
 }
@@ -48,5 +52,9 @@ export const getServerSideConfig = () => {
     hideUserApiKey: !!process.env.HIDE_USER_API_KEY,
     enableGPT4: !process.env.DISABLE_GPT4,
     hideBalanceQuery: !!process.env.HIDE_BALANCE_QUERY,
+
+    azureApiKey: process.env.AZURE_API_KEY,
+    azureDeployName: process.env.AZURE_DEPLOY_NAME,
+    azureEndpoint: process.env.AZURE_ENDPOINT,
   };
 };

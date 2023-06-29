@@ -31,7 +31,7 @@ export async function requestOpenai(req: NextRequest) {
     controller.abort();
   }, 10 * 60 * 1000);
 
-  const fetchUrl = `${baseUrl}/${openaiPath}`;
+  let fetchUrl = `${baseUrl}/${openaiPath}`;
   const fetchOptions: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -47,6 +47,29 @@ export async function requestOpenai(req: NextRequest) {
     duplex: "half",
     signal: controller.signal,
   };
+
+  const AZURE_ENDPOINT = process.env.AZURE_ENDPOINT;
+  if (!!AZURE_ENDPOINT && AZURE_ENDPOINT.endsWith("openai.azure.com")) {
+    const AZURE_API_KEY = process.env.AZURE_API_KEY;
+    const AZURE_DEPLOY_NAME = process.env.AZURE_DEPLOY_NAME;
+
+    if (!!AZURE_API_KEY && !!AZURE_DEPLOY_NAME) {
+      const AZURE_REQUEST_PATH = `openai/deployments/${AZURE_DEPLOY_NAME}/chat/completions?api-version=2023-05-15`;
+
+      fetchUrl = `${AZURE_ENDPOINT}/${AZURE_REQUEST_PATH}`;
+
+      if (!fetchUrl.startsWith("http")) {
+        fetchUrl = `${PROTOCOL}://${fetchUrl}`;
+      }
+
+      fetchOptions.headers = {
+        ...fetchOptions.headers,
+        "api-key": AZURE_API_KEY,
+      };
+
+      console.log("[Azure Fetch Url] ", fetchUrl);
+    }
+  }
 
   // #1815 try to refuse gpt4 request
   if (DISABLE_GPT4 && req.body) {
