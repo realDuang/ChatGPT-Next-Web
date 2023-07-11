@@ -49,7 +49,7 @@ export async function requestOpenai(req: NextRequest) {
   };
 
   const AZURE_ENDPOINT = process.env.AZURE_ENDPOINT;
-  if (!!AZURE_ENDPOINT && AZURE_ENDPOINT.endsWith("openai.azure.com")) {
+  if (!!AZURE_ENDPOINT && /openai\.azure\.com\/?$/.test(AZURE_ENDPOINT)) {
     const AZURE_API_KEY = process.env.AZURE_API_KEY;
     const AZURE_DEPLOY_NAME = process.env.AZURE_DEPLOY_NAME;
 
