@@ -1,9 +1,15 @@
 import { LLMModel } from "../client/api";
 import { getClientConfig } from "../config/client";
-import { DEFAULT_INPUT_TEMPLATE, DEFAULT_MODELS, StoreKey } from "../constant";
+import {
+  AZURE_MODEL_TYPE,
+  DEFAULT_INPUT_TEMPLATE,
+  DEFAULT_MODELS,
+  DEFAULT_MODELS_TYPE,
+  StoreKey,
+} from "../constant";
 import { createPersistStore } from "../utils/store";
 
-export type ModelType = (typeof DEFAULT_MODELS)[number]["name"];
+export type ModelType = DEFAULT_MODELS_TYPE | AZURE_MODEL_TYPE;
 
 export enum SubmitKey {
   Enter = "Enter",
@@ -37,7 +43,7 @@ export const DEFAULT_CONFIG = {
   hideBuiltinMasks: false, // dont add builtin masks
 
   customModels: "",
-  models: DEFAULT_MODELS as any as LLMModel[],
+  models: DEFAULT_MODELS,
 
   modelConfig: {
     model: "gpt-3.5-turbo" as ModelType,

@@ -50,7 +50,15 @@ import Locale, {
 } from "../locales";
 import { copyToClipboard } from "../utils";
 import Link from "next/link";
-import { Path, RELEASE_URL, UPDATE_URL } from "../constant";
+import {
+  AZURE_MODELS,
+  AZURE_MODEL_TYPE,
+  DEFAULT_MODELS,
+  DEFAULT_MODELS_TYPE,
+  Path,
+  RELEASE_URL,
+  UPDATE_URL,
+} from "../constant";
 import { Prompt, SearchService, usePromptStore } from "../store/prompt";
 import { ErrorBoundary } from "./error";
 import { InputRange } from "./input-range";
@@ -61,6 +69,7 @@ import { useSyncStore } from "../store/sync";
 import { nanoid } from "nanoid";
 import { useMaskStore } from "../store/mask";
 import { ProviderType } from "../utils/cloud";
+import { LLMModel } from "../client/api";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -782,135 +791,6 @@ export function Settings() {
               }
             ></input>
           </ListItem>
-        </List>
-
-        <List>
-          {showAccessCode ? (
-            <ListItem
-              title={Locale.Settings.AccessCode.Title}
-              subTitle={Locale.Settings.AccessCode.SubTitle}
-            >
-              <PasswordInput
-                value={accessStore.accessCode}
-                type="text"
-                placeholder={Locale.Settings.AccessCode.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateCode(e.currentTarget.value);
-                }}
-              />
-            </ListItem>
-          ) : (
-            <></>
-          )}
-
-          <ListItem title={Locale.Settings.EnableAOAI}>
-            <input
-              type="checkbox"
-              checked={accessStore.enableAOAI}
-              onChange={(e) => {
-                accessStore.switchAOAI(e.currentTarget.checked);
-              }}
-            ></input>
-          </ListItem>
-
-          {accessStore.enableAOAI ? (
-            <>
-              <ListItem
-                title={Locale.Settings.AzureDeploymentName.Title}
-                subTitle={Locale.Settings.AzureDeploymentName.SubTitle}
-              >
-                <input
-                  value={accessStore.azureDeployName}
-                  type="text"
-                  placeholder={Locale.Settings.AzureDeploymentName.Placeholder}
-                  onChange={(e) => {
-                    accessStore.updateAzureDeployName(e.currentTarget.value);
-                  }}
-                />
-              </ListItem>
-              <ListItem title={Locale.Settings.AOAIToken.Title}>
-                <PasswordInput
-                  value={accessStore.aoaiToken}
-                  type="text"
-                  placeholder={Locale.Settings.AOAIToken.Placeholder}
-                  onChange={(e) => {
-                    accessStore.updateAOAIToken(e.currentTarget.value);
-                  }}
-                />
-              </ListItem>
-              <ListItem title={Locale.Settings.AzureEndpoint.Title}>
-                <input
-                  value={accessStore.azureEndpoint}
-                  type="text"
-                  placeholder={Locale.Settings.AzureEndpoint.Placeholder}
-                  onChange={(e) => {
-                    accessStore.updateAzureEndpoint(e.currentTarget.value);
-                  }}
-                />
-              </ListItem>
-            </>
-          ) : null}
-
-          {!accessStore.enableAOAI ? (
-            <>
-              {!accessStore.hideUserApiKey ? (
-                <ListItem
-                  title={Locale.Settings.Token.Title}
-                  subTitle={Locale.Settings.Token.SubTitle}
-                >
-                  <PasswordInput
-                    value={accessStore.token}
-                    type="text"
-                    placeholder={Locale.Settings.Token.Placeholder}
-                    onChange={(e) => {
-                      accessStore.updateToken(e.currentTarget.value);
-                    }}
-                  />
-                </ListItem>
-              ) : null}
-
-              {!accessStore.hideBalanceQuery ? (
-                <ListItem
-                  title={Locale.Settings.Usage.Title}
-                  subTitle={
-                    showUsage
-                      ? loadingUsage
-                        ? Locale.Settings.Usage.IsChecking
-                        : Locale.Settings.Usage.SubTitle(
-                            usage?.used ?? "[?]",
-                            usage?.subscription ?? "[?]",
-                          )
-                      : Locale.Settings.Usage.NoAccess
-                  }
-                >
-                  {!showUsage || loadingUsage ? (
-                    <div />
-                  ) : (
-                    <IconButton
-                      icon={<ResetIcon></ResetIcon>}
-                      text={Locale.Settings.Usage.Check}
-                      onClick={() => checkUsage(true)}
-                    />
-                  )}
-                </ListItem>
-              ) : null}
-              {!accessStore.hideUserApiKey ? (
-                <ListItem
-                  title={Locale.Settings.Endpoint.Title}
-                  subTitle={Locale.Settings.Endpoint.SubTitle}
-                >
-                  <input
-                    type="text"
-                    value={accessStore.openaiUrl}
-                    placeholder="https://api.openai.com/"
-                    onChange={(e) =>
-                      accessStore.updateOpenAiUrl(e.currentTarget.value)
-                    }
-                  ></input>
-                </ListItem>
-              ) : null}
-            </>
-          ) : null}
           <ListItem
             title={Locale.Settings.Mask.Builtin.Title}
             subTitle={Locale.Settings.Mask.Builtin.SubTitle}
@@ -979,61 +859,130 @@ export function Settings() {
             <></>
           )}
 
-          {!accessStore.hideUserApiKey ? (
+          <ListItem title={Locale.Settings.EnableAOAI}>
+            <input
+              type="checkbox"
+              checked={accessStore.enableAOAI}
+              onChange={(e) => {
+                accessStore.switchAOAI(e.currentTarget.checked);
+                if (e.currentTarget.checked) {
+                  updateConfig((config) => {
+                    config.models = AZURE_MODELS;
+                    config.modelConfig = {
+                      ...config.modelConfig,
+                      model: AZURE_MODELS[0].name as AZURE_MODEL_TYPE,
+                    };
+                  });
+                } else {
+                  updateConfig((config) => {
+                    config.models = DEFAULT_MODELS;
+                    config.modelConfig = {
+                      ...config.modelConfig,
+                      model: DEFAULT_MODELS[0].name as DEFAULT_MODELS_TYPE,
+                    };
+                  });
+                }
+              }}
+            ></input>
+          </ListItem>
+
+          {accessStore.enableAOAI ? (
             <>
               <ListItem
-                title={Locale.Settings.Endpoint.Title}
-                subTitle={Locale.Settings.Endpoint.SubTitle}
+                title={Locale.Settings.AzureDeploymentName.Title}
+                subTitle={Locale.Settings.AzureDeploymentName.SubTitle}
               >
                 <input
+                  value={accessStore.azureDeployName}
                   type="text"
-                  value={accessStore.openaiUrl}
-                  placeholder="https://api.openai.com/"
-                  onChange={(e) =>
-                    accessStore.updateOpenAiUrl(e.currentTarget.value)
-                  }
-                ></input>
-              </ListItem>
-              <ListItem
-                title={Locale.Settings.Token.Title}
-                subTitle={Locale.Settings.Token.SubTitle}
-              >
-                <PasswordInput
-                  value={accessStore.token}
-                  type="text"
-                  placeholder={Locale.Settings.Token.Placeholder}
+                  placeholder={Locale.Settings.AzureDeploymentName.Placeholder}
                   onChange={(e) => {
-                    accessStore.updateToken(e.currentTarget.value);
+                    accessStore.updateAzureDeployName(e.currentTarget.value);
+                  }}
+                />
+              </ListItem>
+              <ListItem title={Locale.Settings.AOAIToken.Title}>
+                <PasswordInput
+                  value={accessStore.aoaiToken}
+                  type="text"
+                  placeholder={Locale.Settings.AOAIToken.Placeholder}
+                  onChange={(e) => {
+                    accessStore.updateAOAIToken(e.currentTarget.value);
+                  }}
+                />
+              </ListItem>
+              <ListItem title={Locale.Settings.AzureEndpoint.Title}>
+                <input
+                  value={accessStore.azureEndpoint}
+                  type="text"
+                  placeholder={Locale.Settings.AzureEndpoint.Placeholder}
+                  onChange={(e) => {
+                    accessStore.updateAzureEndpoint(e.currentTarget.value);
                   }}
                 />
               </ListItem>
             </>
           ) : null}
 
-          {!accessStore.hideBalanceQuery ? (
-            <ListItem
-              title={Locale.Settings.Usage.Title}
-              subTitle={
-                showUsage
-                  ? loadingUsage
-                    ? Locale.Settings.Usage.IsChecking
-                    : Locale.Settings.Usage.SubTitle(
-                        usage?.used ?? "[?]",
-                        usage?.subscription ?? "[?]",
-                      )
-                  : Locale.Settings.Usage.NoAccess
-              }
-            >
-              {!showUsage || loadingUsage ? (
-                <div />
-              ) : (
-                <IconButton
-                  icon={<ResetIcon></ResetIcon>}
-                  text={Locale.Settings.Usage.Check}
-                  onClick={() => checkUsage(true)}
-                />
-              )}
-            </ListItem>
+          {!accessStore.enableAOAI ? (
+            <>
+              {!accessStore.hideUserApiKey ? (
+                <>
+                  <ListItem
+                    title={Locale.Settings.Endpoint.Title}
+                    subTitle={Locale.Settings.Endpoint.SubTitle}
+                  >
+                    <input
+                      type="text"
+                      value={accessStore.openaiUrl}
+                      placeholder="https://api.openai.com/"
+                      onChange={(e) =>
+                        accessStore.updateOpenAiUrl(e.currentTarget.value)
+                      }
+                    ></input>
+                  </ListItem>
+                  <ListItem
+                    title={Locale.Settings.Token.Title}
+                    subTitle={Locale.Settings.Token.SubTitle}
+                  >
+                    <PasswordInput
+                      value={accessStore.token}
+                      type="text"
+                      placeholder={Locale.Settings.Token.Placeholder}
+                      onChange={(e) => {
+                        accessStore.updateToken(e.currentTarget.value);
+                      }}
+                    />
+                  </ListItem>
+                </>
+              ) : null}
+
+              {!accessStore.hideBalanceQuery ? (
+                <ListItem
+                  title={Locale.Settings.Usage.Title}
+                  subTitle={
+                    showUsage
+                      ? loadingUsage
+                        ? Locale.Settings.Usage.IsChecking
+                        : Locale.Settings.Usage.SubTitle(
+                            usage?.used ?? "[?]",
+                            usage?.subscription ?? "[?]",
+                          )
+                      : Locale.Settings.Usage.NoAccess
+                  }
+                >
+                  {!showUsage || loadingUsage ? (
+                    <div />
+                  ) : (
+                    <IconButton
+                      icon={<ResetIcon></ResetIcon>}
+                      text={Locale.Settings.Usage.Check}
+                      onClick={() => checkUsage(true)}
+                    />
+                  )}
+                </ListItem>
+              ) : null}
+            </>
           ) : null}
 
           <ListItem

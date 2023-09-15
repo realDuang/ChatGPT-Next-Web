@@ -1,7 +1,6 @@
 import {
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
-  AZURE_API_VERSION,
   OpenaiPath,
   REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
@@ -29,9 +28,10 @@ export class ChatGPTApi implements LLMApi {
   public get ChatPath() {
     const OPENAI_REQUEST_PATH = OpenaiPath.ChatPath;
     const { enableAOAI, azureDeployName } = useAccessStore.getState();
+    const { modelConfig } = useAppConfig.getState();
     if (enableAOAI && azureDeployName.length > 0) {
       // For now azure api only support one version
-      const azureApiVersion = AZURE_API_VERSION[0].name;
+      const azureApiVersion = modelConfig.model;
       const AZURE_REQUEST_PATH = `openai/deployments/${azureDeployName}/chat/completions?api-version=${azureApiVersion}`;
       return AZURE_REQUEST_PATH;
     }

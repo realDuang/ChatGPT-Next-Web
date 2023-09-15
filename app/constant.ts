@@ -1,3 +1,5 @@
+import { LLMModel } from "./client/api";
+
 export const OWNER = "realDuang";
 export const REPO = "ChatGPT-Next-Web";
 export const REPO_URL = `https://github.com/${OWNER}/${REPO}`;
@@ -74,63 +76,42 @@ Current time: {{time}}`;
 
 export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
 
-export const DEFAULT_MODELS = [
-  {
-    name: "gpt-4",
-    available: true,
-  },
-  {
-    name: "gpt-4-0314",
-    available: true,
-  },
-  {
-    name: "gpt-4-0613",
-    available: true,
-  },
-  {
-    name: "gpt-4-32k",
-    available: true,
-  },
-  {
-    name: "gpt-4-32k-0314",
-    available: true,
-  },
-  {
-    name: "gpt-4-32k-0613",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-0301",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-0613",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-16k",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-16k-0613",
-    available: true,
-  },
+export const DEFAULT_MODELS_LIST = [
+  "gpt-4",
+  "gpt-4-0314",
+  "gpt-4-0613",
+  "gpt-4-32k",
+  "gpt-4-32k-0314",
+  "gpt-4-32k-0613",
+  "gpt-3.5-turbo",
+  "gpt-3.5-turbo-0301",
+  "gpt-3.5-turbo-0613",
+  "gpt-3.5-turbo-16k",
+  "gpt-3.5-turbo-16k-0613",
 ] as const;
 
-export const AZURE_API_VERSION = [
-  {
-    name: "2023-05-15",
-    available: true,
-  },
-  {
-    name: "2023-03-15-preview",
-    available: true,
-  },
+export type DEFAULT_MODELS_TYPE = (typeof DEFAULT_MODELS_LIST)[number];
+
+export const DEFAULT_MODELS: LLMModel[] = DEFAULT_MODELS_LIST.map((model) => ({
+  name: model,
+  available: true,
+}));
+
+export const AZURE_MODEL_LIST = [
+  "2022-12-01",
+  "2023-03-15-preview",
+  "2023-05-15",
+  "2023-06-01-preview",
+  "2023-07-01-preview",
+  "2023-08-01-preview",
 ] as const;
+
+export type AZURE_MODEL_TYPE = (typeof AZURE_MODEL_LIST)[number];
+
+export const AZURE_MODELS: LLMModel[] = AZURE_MODEL_LIST.map((model) => ({
+  name: model,
+  available: true,
+}));
 
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;
