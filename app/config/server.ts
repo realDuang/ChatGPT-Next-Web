@@ -17,6 +17,8 @@ declare global {
       AZURE_API_KEY?: string;
       AZURE_DEPLOY_NAME?: string;
       AZURE_ENDPOINT?: string;
+      AZURE_API_VERSION?: string;
+
     }
   }
 }
@@ -56,5 +58,6 @@ export const getServerSideConfig = () => {
     azureApiKey: process.env.AZURE_API_KEY,
     azureDeployName: process.env.AZURE_DEPLOY_NAME,
     azureEndpoint: process.env.AZURE_ENDPOINT,
+    azureApiVersion: process.env.AZURE_API_VERSION,
   };
 };
