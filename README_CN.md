@@ -98,9 +98,19 @@ OpenAI 接口代理 URL，如果你手动配置了 openai 接口代理，请填�
 
 如果你不想让用户使用 GPT-4，将此环境变量设置为 1 即可。
 
-### `HIDE_BALANCE_QUERY` （可选）
+### `ENABLE_BALANCE_QUERY` （可选）
 
-如果你不想让用户查询余额，将此环境变量设置为 1 即可。
+如果你想启用余额查询功能，将此环境变量设置为 1 即可。
+
+### `DISABLE_FAST_LINK` （可选）
+
+如果你想禁用从链接解析预制设置，将此环境变量设置为 1 即可。
+
+### `CUSTOM_MODELS` （可选）
+
+> 示例：`+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo` 表示增加 `qwen-7b-chat` 和 `glm-6b` 到模型列表，而从列表中删除 `gpt-3.5-turbo`。
+
+用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，用英文逗号隔开。
 
 ## 开发
 
@@ -114,7 +124,7 @@ OpenAI 接口代理 URL，如果你手动配置了 openai 接口代理，请填�
 OPENAI_API_KEY=<your api key here>
 
 # 中国大陆用户，可以使用本项目自带的代理进行开发，你也可以自由选择其他代理地址
-BASE_URL=https://chatgpt2.nextweb.fun/api/proxy
+BASE_URL=https://nb.nextweb.fun/api/proxy
 ```
 
 ### 本地开发
@@ -180,6 +190,7 @@ bash <(curl -s https://raw.githubusercontent.com/Yidadaa/ChatGPT-Next-Web/main/s
 [见项目贡献者列表](https://github.com/Yidadaa/ChatGPT-Next-Web/graphs/contributors)
 
 ### 相关项目
+
 - [one-api](https://github.com/songquanpeng/one-api): 一站式大模型额度管理平台，支持市面上所有主流大语言模型
 
 ## 开源协议
