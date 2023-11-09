@@ -65,6 +65,10 @@ ENDPOINT。从 Azure 门户检查资源时，可在“密钥和终结点”部�
 
 DEPLOYMENT-NAME。 此值将对应于在部署模型时为部署选择的自定义名称。 此值可在 Azure 门户中的“资源管理”>“部署”下，或者在 Azure OpenAI Studio 中的“管理”>“部署”下找到此值。
 
+#### `AZURE_API_VERSION` (可选)
+
+AZURE-API-VERSION。对应Azure OpenAI的API版本号。(在上述环境变量存在时，默认值为"2023-05-15")。
+
 #### `CODE` （可选）
 
 访问密码，可选，可以使用逗号隔开多个密码。

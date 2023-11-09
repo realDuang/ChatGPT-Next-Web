@@ -58,9 +58,10 @@ export async function requestOpenai(req: NextRequest) {
   if (!!AZURE_ENDPOINT && /openai\.azure\.com\/?$/.test(AZURE_ENDPOINT)) {
     const AZURE_API_KEY = process.env.AZURE_API_KEY;
     const AZURE_DEPLOY_NAME = process.env.AZURE_DEPLOY_NAME;
+    const AZURE_API_VERSION = process.env.AZURE_API_VERSION || "2023-05-15";
 
     if (!!AZURE_API_KEY && !!AZURE_DEPLOY_NAME) {
-      const AZURE_REQUEST_PATH = `openai/deployments/${AZURE_DEPLOY_NAME}/chat/completions?api-version=2023-05-15`;
+      const AZURE_REQUEST_PATH = `openai/deployments/${AZURE_DEPLOY_NAME}/chat/completions?api-version=${AZURE_API_VERSION}`;
 
       fetchUrl = `${AZURE_ENDPOINT}/${AZURE_REQUEST_PATH}`;
 
