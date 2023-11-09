@@ -910,7 +910,9 @@ export function Settings() {
               type="checkbox"
               checked={accessStore.enableAOAI}
               onChange={(e) => {
-                accessStore.switchAOAI(e.currentTarget.checked);
+                accessStore.update(
+                  (access) => (access.enableAOAI = e.currentTarget.checked),
+                );
                 if (e.currentTarget.checked) {
                   updateConfig((config) => {
                     config.models = AZURE_MODELS;
@@ -943,7 +945,10 @@ export function Settings() {
                   type="text"
                   placeholder={Locale.Settings.AzureDeploymentName.Placeholder}
                   onChange={(e) => {
-                    accessStore.updateAzureDeployName(e.currentTarget.value);
+                    accessStore.update(
+                      (access) =>
+                        (access.azureDeployName = e.currentTarget.value),
+                    );
                   }}
                 />
               </ListItem>
@@ -953,7 +958,9 @@ export function Settings() {
                   type="text"
                   placeholder={Locale.Settings.AOAIToken.Placeholder}
                   onChange={(e) => {
-                    accessStore.updateAOAIToken(e.currentTarget.value);
+                    accessStore.update(
+                      (access) => (access.aoaiToken = e.currentTarget.value),
+                    );
                   }}
                 />
               </ListItem>
@@ -963,7 +970,10 @@ export function Settings() {
                   type="text"
                   placeholder={Locale.Settings.AzureEndpoint.Placeholder}
                   onChange={(e) => {
-                    accessStore.updateAzureEndpoint(e.currentTarget.value);
+                    accessStore.update(
+                      (access) =>
+                        (access.azureEndpoint = e.currentTarget.value),
+                    );
                   }}
                 />
               </ListItem>
@@ -983,7 +993,10 @@ export function Settings() {
                       value={accessStore.openaiUrl}
                       placeholder="https://api.openai.com/"
                       onChange={(e) =>
-                        accessStore.updateOpenAiUrl(e.currentTarget.value)
+                        accessStore.update(
+                          (access) =>
+                            (access.openaiUrl = e.currentTarget.value),
+                        )
                       }
                     ></input>
                   </ListItem>

@@ -36,29 +36,7 @@ export const useAccessStore = createPersistStore(
 
       return get().needCode;
     },
-    updateCode(code: string) {
-      set(() => ({ accessCode: code?.trim() }));
-    },
-    updateToken(token: string) {
-      set(() => ({ token: token?.trim() }));
-    },
 
-    switchAOAI(switchStatus: boolean) {
-      set((state) => ({ enableAOAI: switchStatus }));
-    },
-    updateAzureEndpoint(azureEndpoint: string) {
-      set((state) => ({ azureEndpoint }));
-    },
-    updateAzureDeployName(azureDeployName: string) {
-      set((state) => ({ azureDeployName }));
-    },
-    updateAOAIToken(aoaiToken: string) {
-      set(() => ({ aoaiToken }));
-    },
-
-    updateOpenAiUrl(url: string) {
-      set(() => ({ openaiUrl: url?.trim() }));
-    },
     isAuthorized() {
       this.fetch();
 
