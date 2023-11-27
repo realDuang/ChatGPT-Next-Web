@@ -5,6 +5,9 @@ import { collectModelTable, collectModels } from "../utils/model";
 
 const serverConfig = getServerSideConfig();
 
+const DEFAULT_PROTOCOL = "https";
+const PROTOCOL = process.env.PROTOCOL || DEFAULT_PROTOCOL;
+
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
   const authValue = req.headers.get("Authorization") ?? "";
